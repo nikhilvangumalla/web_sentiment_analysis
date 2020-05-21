@@ -1,4 +1,64 @@
 extends base
 
 block content
-	h2= review.productID
+	.search-bar-container-resultpage
+		include _searchBar
+	canvas#myChart(width="300" height="100")
+	script(src="/js/chart.min.js")
+	script.
+		var ctx = document.getElementById("myChart").getContext('2d');
+		var myChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: "!{labels}".split(','),
+					datasets: [{
+							label: 'Positives',
+							backgroundColor: '#0084B6',
+							data: [!{positiveData}],
+					},
+					{
+							label: 'Negatives',
+							backgroundColor: '#D9A491',
+							data: [!{negativeData}],
+					}]
+			},
+			options: {
+				title: {
+						display: true,
+						text: 'Product Reviews',
+						fontSize:20
+				},
+				tooltips: {
+					mode: 'index',
+					titleFontSize:17,
+					titleSpacing:4,
+					bodyFontSize:15,
+					bodySpacing:10,
+					xPadding:15,
+					yPadding:10
+				},
+				scales: {
+					xAxes: [{
+						stacked: true,
+					}],
+					yAxes: [{
+						stacked: true,
+					}]
+				},
+				legend: {
+					display: true,
+					labels:{
+						fontSize:15,
+					}
+				},
+				layout: {
+					padding: {
+						left: 50,
+						right: 50,
+						top: 0,
+						bottom: 0
+					}
+				}
+			}
+		});
+		document.getElementById('producturl').value="!{productURL}"

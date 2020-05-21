@@ -12,7 +12,12 @@ export interface Review {
 	productID: string;
 }
 interface Features {
-	[prop: string]: string[];
+	[prop: string]: FeatureObject;
+}
+interface FeatureObject {
+	negatives: number;
+	positives: number;
+	related: string[];
 }
 
 export interface Database {

@@ -52,17 +52,41 @@ app.post('/', async (req, res) => {
 		await db.reviews.insertOne(data);
 		await deleteFile(productID);
 	}
-	res.redirect(`http://localhost:9000/result/${productID}`);
-});
-
-app.get('/result/:productID', async (req, res) => {
+	// res.redirect(`http://localhost:9000/result/${productID}`);
 	const review = (await db.reviews.findOne({
-		productID: req.params.productID,
+		productID: productID,
 	})) as Review;
+	// const labels = Object.keys(review.features);
+	const labels = Object.keys(review.features);
+	const positiveData = Object.values(review.features).map(
+		(ele) => ele.positives
+	);
+	const negativeData = Object.values(review.features).map(
+		(ele) => ele.negatives
+	);
 	res.render('result', {
-		review: review,
+		labels,
+		positiveData,
+		negativeData,
+		review,
+		productURL,
 	});
 });
+
+// app.get('/result/:productID', async (req, res) => {
+// 	const review = (await db.reviews.findOne({
+// 		productID: req.params.productID,
+// 	})) as Review;
+// 	// const labels = Object.keys(review.features);
+// 	const labels = Object.keys(review.features);
+// 	const positiveData = Object.values(review.features).map(
+// 		(ele) => ele.positives
+// 	);
+// 	const negativeData = Object.values(review.features).map(
+// 		(ele) => ele.negatives
+// 	);
+// 	res.render('result', { labels, review, positiveData, negativeData });
+// });
 
 const mountDatabase = async () => {
 	db = await connectDatabase();

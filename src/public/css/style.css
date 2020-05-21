@@ -3,15 +3,20 @@
 	padding: 0;
 	box-sizing: border-box;
 }
-body {
-	background: #00b5e9;
-}
+/* body {
+} */
 
-.form-container {
+.search-bar-container-homepage {
+	background: #00b5e9;
 	min-height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+.search-bar-container-resultpage {
+	display: flex;
+	justify-content: center;
+	margin: 50px;
 }
 
 form {
