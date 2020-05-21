@@ -37,56 +37,48 @@ app.post('/', async (req, res) => {
 		url_parts[4] == 'dp' || url_parts[4] == 'product'
 			? url_parts[5]
 			: url_parts[4];
-	const checkDB = await db.reviews.findOne({ productID });
+	const checkDB = (await db.reviews.findOne({ productID })) as Review;
 	if (!checkDB) {
-		await Scraper(productURL);
-		const { data } = await axios('http://localhost:5000', {
-			method: 'POST',
-			headers: {
-				'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
-			},
-			data: qs.stringify({
-				filename: `${productID}.csv`,
-			}),
-		});
-		await db.reviews.insertOne(data);
-		await deleteFile(productID);
+		try {
+			await Scraper(productURL);
+			const { data } = await axios('http://localhost:5000', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+				},
+				data: qs.stringify({
+					filename: `${productID}.csv`,
+				}),
+			});
+			await db.reviews.insertOne(data);
+			// await deleteFile(productID);
+		} catch (error) {
+			console.log('something went wrong');
+			console.log(error);
+			res.render('error', { productURL });
+		}
 	}
-	// res.redirect(`http://localhost:9000/result/${productID}`);
 	const review = (await db.reviews.findOne({
 		productID: productID,
 	})) as Review;
-	// const labels = Object.keys(review.features);
-	const labels = Object.keys(review.features);
-	const positiveData = Object.values(review.features).map(
-		(ele) => ele.positives
-	);
-	const negativeData = Object.values(review.features).map(
-		(ele) => ele.negatives
-	);
-	res.render('result', {
-		labels,
-		positiveData,
-		negativeData,
-		review,
-		productURL,
-	});
+	if (review) {
+		const labels = Object.keys(review.features);
+		const positiveData = Object.values(review.features).map(
+			(ele) => ele.positives
+		);
+		const negativeData = Object.values(review.features).map(
+			(ele) => ele.negatives
+		);
+		console.log('completed');
+		res.render('result', {
+			labels,
+			positiveData,
+			negativeData,
+			review,
+			productURL,
+		});
+	}
 });
-
-// app.get('/result/:productID', async (req, res) => {
-// 	const review = (await db.reviews.findOne({
-// 		productID: req.params.productID,
-// 	})) as Review;
-// 	// const labels = Object.keys(review.features);
-// 	const labels = Object.keys(review.features);
-// 	const positiveData = Object.values(review.features).map(
-// 		(ele) => ele.positives
-// 	);
-// 	const negativeData = Object.values(review.features).map(
-// 		(ele) => ele.negatives
-// 	);
-// 	res.render('result', { labels, review, positiveData, negativeData });
-// });
 
 const mountDatabase = async () => {
 	db = await connectDatabase();

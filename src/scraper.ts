@@ -87,7 +87,7 @@ async function scrape(url: string, cont: any) {
 
 	return new Promise(async (resolve, reject) => {
 		fs.writeFile(
-			`./../sentiment_analysis_ml_part/${filename}`,
+			`./../sentiment_analysis_ml_part/csv_files/${filename}`,
 			stringify(fullReviews),
 			(err: object) => {
 				if (err) {
