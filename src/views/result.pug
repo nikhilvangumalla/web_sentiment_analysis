@@ -4,6 +4,15 @@ block content
 	.search-bar-container-resultpage
 		include _searchBar
 	canvas#myChart(width="300" height="100")
+	button#toggle-details.btn Show Details
+	.review-details
+		each feature in labels
+			.feature= feature
+			.feature-details
+				each val in review.classification
+					if val.category === feature
+						p= val.sentence
+						p= val.sentiment
 	script(src="/js/chart.min.js")
 	script.
 		var ctx = document.getElementById("myChart").getContext('2d');
@@ -61,4 +70,19 @@ block content
 				}
 			}
 		});
-		document.getElementById('producturl').value="!{productURL}"
+		document.getElementById('producturl').value="!{productURL}";
+		//- document.getElementById("myChart").onclick = function(e){
+		//- 	const activePoints = myChart.getElementsAtEvent(e);
+		//- 	const feature = activePoints[0]._model.label;
+		//- 	console.log(feature)
+		//- }
+		const detailsButton=document.getElementById('toggle-details');
+		detailsButton.addEventListener('click', e => {
+			if(e.target.innerHTML === 'Show Details'){
+				detailsButton.innerHTML = 'Hide Details'
+				document.querySelector('.review-details').style.display='block'
+			} else {
+				detailsButton.innerHTML = 'Show Details'
+				document.querySelector('.review-details').style.display='none'
+			}
+		})

@@ -80,3 +80,34 @@ input:focus {
 	box-shadow: none;
 	outline: 0;
 }
+
+.review-details {
+	margin: 40px;
+	display: none;
+}
+
+.feature {
+	text-transform: uppercase;
+	font-size: 40px;
+	margin: 20px 0px;
+}
+
+.feature-details {
+	display: grid;
+	grid-template-columns: 1fr 100px;
+	grid-gap: 10px;
+	font-size: 20px;
+}
+
+.btn {
+	padding: 20px;
+	position: relative;
+	top: 30px;
+	left: 45%;
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	font-size: 20px;
+	background-color: var(--background-color);
+	color: #fff;
+}
